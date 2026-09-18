@@ -4,6 +4,10 @@ import json
 import pandas as pd
 
 
+# -------------------------------------------------
+# Paths
+# -------------------------------------------------
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 RESULTS_DIR = (
@@ -13,30 +17,37 @@ RESULTS_DIR = (
 )
 
 
-FINAL_METRICS_FILE = (
-    RESULTS_DIR / "final_metrics.csv"
-)
+FINAL_METRICS_FILE = RESULTS_DIR / "final_metrics.csv"
 
 ROBUSTNESS_FILE = (
-    RESULTS_DIR / "robustness_degradation.csv"
+    RESULTS_DIR
+    / "robustness_degradation.csv"
 )
 
 SENSITIVITY_FILE = (
-    RESULTS_DIR / "sensitivity_metrics.csv"
+    RESULTS_DIR
+    / "sensitivity_metrics.csv"
 )
 
 EFFICIENCY_FILE = (
-    RESULTS_DIR / "efficiency_table.csv"
+    RESULTS_DIR
+    / "efficiency_table.csv"
 )
 
 STATISTICS_FILE = (
-    RESULTS_DIR / "statistical_results.csv"
+    RESULTS_DIR
+    / "statistical_results.csv"
 )
 
 MANIFEST_FILE = (
-    RESULTS_DIR / "experiment_manifest.json"
+    RESULTS_DIR
+    / "experiment_manifest.json"
 )
 
+
+# -------------------------------------------------
+# Display ordering
+# -------------------------------------------------
 
 NOISE_ORDER = [
     "clean",
@@ -44,6 +55,7 @@ NOISE_ORDER = [
     "moderate",
     "severe",
 ]
+
 
 CHUNKER_ORDER = [
     "fixed",
@@ -68,21 +80,72 @@ METRIC_LABELS = {
 }
 
 
-def _require_file(path):
-    """
-    Raise a clear error if a dashboard artifact is missing.
-    """
+# -------------------------------------------------
+# Validation helpers
+# -------------------------------------------------
 
+def _require_file(path):
     if not path.exists():
         raise FileNotFoundError(
             f"Research result file not found: {path}"
         )
 
 
+def _validate_columns(
+    dataframe,
+    required_columns,
+    filename,
+):
+    missing = (
+        required_columns
+        - set(dataframe.columns)
+    )
+
+    if missing:
+        raise ValueError(
+            f"{filename} is missing columns: "
+            f"{sorted(missing)}"
+        )
+
+
+def _order_results(dataframe):
+    result = dataframe.copy()
+
+    if "chunker" in result.columns:
+        result["chunker"] = pd.Categorical(
+            result["chunker"],
+            categories=CHUNKER_ORDER,
+            ordered=True,
+        )
+
+    if "noise_level" in result.columns:
+        result["noise_level"] = pd.Categorical(
+            result["noise_level"],
+            categories=NOISE_ORDER,
+            ordered=True,
+        )
+
+    sort_columns = []
+
+    if "chunker" in result.columns:
+        sort_columns.append("chunker")
+
+    if "noise_level" in result.columns:
+        sort_columns.append("noise_level")
+
+    if sort_columns:
+        result = result.sort_values(
+            sort_columns
+        )
+
+    return result.reset_index(drop=True)
+
+
+# -------------------------------------------------
+# Manifest
+# -------------------------------------------------
+
 def load_manifest():
-    """
-    Load experiment metadata.
-    """
 
     _require_file(MANIFEST_FILE)
 
@@ -93,14 +156,15 @@ def load_manifest():
         return json.load(file)
 
 
+# -------------------------------------------------
+# Main metrics
+# -------------------------------------------------
+
 def load_final_metrics():
-    """
-    Load primary 8,456-question retrieval metrics.
-    """
 
     _require_file(FINAL_METRICS_FILE)
 
-    df = pd.read_csv(
+    dataframe = pd.read_csv(
         FINAL_METRICS_FILE
     )
 
@@ -115,22 +179,23 @@ def load_final_metrics():
     }
 
     _validate_columns(
-        df,
+        dataframe,
         required_columns,
         "final_metrics.csv",
     )
 
-    return _order_results(df)
+    return _order_results(dataframe)
 
+
+# -------------------------------------------------
+# Robustness degradation
+# -------------------------------------------------
 
 def load_robustness_degradation():
-    """
-    Load clean-to-noisy degradation results.
-    """
 
     _require_file(ROBUSTNESS_FILE)
 
-    df = pd.read_csv(
+    dataframe = pd.read_csv(
         ROBUSTNESS_FILE
     )
 
@@ -146,22 +211,23 @@ def load_robustness_degradation():
     }
 
     _validate_columns(
-        df,
+        dataframe,
         required_columns,
         "robustness_degradation.csv",
     )
 
-    return _order_results(df)
+    return _order_results(dataframe)
 
+
+# -------------------------------------------------
+# Sensitivity results
+# -------------------------------------------------
 
 def load_sensitivity_metrics():
-    """
-    Load context-verified sensitivity results.
-    """
 
     _require_file(SENSITIVITY_FILE)
 
-    df = pd.read_csv(
+    dataframe = pd.read_csv(
         SENSITIVITY_FILE
     )
 
@@ -176,23 +242,23 @@ def load_sensitivity_metrics():
     }
 
     _validate_columns(
-        df,
+        dataframe,
         required_columns,
         "sensitivity_metrics.csv",
     )
 
-    return _order_results(df)
+    return _order_results(dataframe)
 
+
+# -------------------------------------------------
+# Efficiency
+# -------------------------------------------------
 
 def load_efficiency_metrics():
-    """
-    Load efficiency measurements and calculate useful
-    dashboard fields.
-    """
 
     _require_file(EFFICIENCY_FILE)
 
-    df = pd.read_csv(
+    dataframe = pd.read_csv(
         EFFICIENCY_FILE
     )
 
@@ -213,41 +279,46 @@ def load_efficiency_metrics():
     }
 
     _validate_columns(
-        df,
+        dataframe,
         required_columns,
         "efficiency_table.csv",
     )
 
-    # Same configuration runtime definition used in the paper.
-    # Cached query embedding time is intentionally excluded.
-    df["total_configuration_time_sec"] = (
-        df["chunking_time_sec"]
-        + df["embedding_time_sec"]
-        + df["index_build_time_sec"]
-        + df["total_retrieval_time_sec"]
+    dataframe[
+        "total_configuration_time_sec"
+    ] = (
+        dataframe["chunking_time_sec"]
+        + dataframe["embedding_time_sec"]
+        + dataframe["index_build_time_sec"]
+        + dataframe["total_retrieval_time_sec"]
     )
 
-    df["total_configuration_time_min"] = (
-        df["total_configuration_time_sec"]
-        / 60.0
+    dataframe[
+        "total_configuration_time_min"
+    ] = (
+        dataframe[
+            "total_configuration_time_sec"
+        ]
+        / 60
     )
 
-    df["index_size_mb"] = (
-        df["index_size_bytes"]
+    dataframe["index_size_mb"] = (
+        dataframe["index_size_bytes"]
         / (1024 * 1024)
     )
 
-    return _order_results(df)
+    return _order_results(dataframe)
 
+
+# -------------------------------------------------
+# Statistical results
+# -------------------------------------------------
 
 def load_statistical_results():
-    """
-    Load bootstrap estimates and confidence intervals.
-    """
 
     _require_file(STATISTICS_FILE)
 
-    df = pd.read_csv(
+    dataframe = pd.read_csv(
         STATISTICS_FILE
     )
 
@@ -265,24 +336,25 @@ def load_statistical_results():
     }
 
     _validate_columns(
-        df,
+        dataframe,
         required_columns,
         "statistical_results.csv",
     )
 
-    return _order_results(df)
+    return _order_results(dataframe)
 
+
+# -------------------------------------------------
+# Dashboard summary
+# -------------------------------------------------
 
 def get_experiment_summary():
-    """
-    Return a compact dashboard experiment summary.
-    """
 
     manifest = load_manifest()
 
     configurations = manifest.get(
         "configurations",
-        {}
+        {},
     )
 
     completed = sum(
@@ -291,81 +363,36 @@ def get_experiment_summary():
     )
 
     return {
-        "run_id": manifest.get("run_id"),
-        "model": manifest.get("model"),
+        "run_id":
+            manifest.get("run_id"),
+
+        "model":
+            manifest.get("model"),
+
         "embedding_dimension":
-            manifest.get("embedding_dimension"),
+            manifest.get(
+                "embedding_dimension"
+            ),
+
         "primary_qas":
             manifest.get("primary_qas"),
+
         "context_verified_qas":
-            manifest.get("context_verified_qas"),
+            manifest.get(
+                "context_verified_qas"
+            ),
+
         "top_k":
             manifest.get("top_k"),
+
         "content_token_budget":
-            manifest.get("content_token_budget"),
+            manifest.get(
+                "content_token_budget"
+            ),
+
         "completed_configurations":
             completed,
+
         "total_configurations":
             len(configurations),
     }
-
-
-def _validate_columns(
-    df,
-    required_columns,
-    filename,
-):
-    """
-    Ensure copied research artifacts have the expected schema.
-    """
-
-    missing = (
-        required_columns
-        - set(df.columns)
-    )
-
-    if missing:
-        raise ValueError(
-            f"{filename} is missing columns: "
-            f"{sorted(missing)}"
-        )
-
-
-def _order_results(df):
-    """
-    Apply consistent chunker/noise ordering.
-    """
-
-    result = df.copy()
-
-    if "chunker" in result.columns:
-        result["chunker"] = pd.Categorical(
-            result["chunker"],
-            categories=CHUNKER_ORDER,
-            ordered=True,
-        )
-
-    if "noise_level" in result.columns:
-        result["noise_level"] = pd.Categorical(
-            result["noise_level"],
-            categories=NOISE_ORDER,
-            ordered=True,
-        )
-
-    sort_columns = [
-        column
-        for column in [
-            "chunker",
-            "noise_level",
-        ]
-        if column in result.columns
-    ]
-
-    if sort_columns:
-        result = result.sort_values(
-            sort_columns
-        )
-
-    return result.reset_index(
-        drop=True
-    )

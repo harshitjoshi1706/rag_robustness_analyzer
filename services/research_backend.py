@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import os
 
 from transformers.utils import logging as transformers_logging
 
@@ -11,34 +12,41 @@ transformers_logging.set_verbosity_error()
 
 PROJECTS_ROOT = Path(__file__).resolve().parents[2]
 
-RESEARCH_ROOT = PROJECTS_ROOT / "rag_chunk_robustness"
+RESEARCH_ROOT = Path(os.environ.get("RAG_RESEARCH_ROOT", str(PROJECTS_ROOT / "rag_chunk_robustness"))).expanduser().resolve()
 RESEARCH_SRC = RESEARCH_ROOT / "src"
 
 if not RESEARCH_SRC.exists():
     raise RuntimeError(
-        f"Research backend not found at: {RESEARCH_SRC}"
+        f"Research backend not found at: {RESEARCH_SRC}. "
+        "Set RAG_RESEARCH_ROOT to the rag_chunk_robustness repository directory."
     )
 
 if str(RESEARCH_SRC) not in sys.path:
     sys.path.insert(0, str(RESEARCH_SRC))
 
 
-from embeddings import (
-    load_embedding_model,
-    embed_chunk_texts,
-    embed_query,
-)
+# Do not create __pycache__ files in the read-only research repository.
+_previous_bytecode_setting = sys.dont_write_bytecode
+sys.dont_write_bytecode = True
+try:
+    from embeddings import (
+        load_embedding_model,
+        embed_chunk_texts,
+        embed_query,
+    )
 
-from faiss_index import (
-    create_index,
-    add_vectors,
-)
+    from faiss_index import (
+        create_index,
+        add_vectors,
+    )
 
-from retrieval_pipeline import (
-    CHUNKERS,
-    chunk_document,
-    retrieve_one,
-)
+    from retrieval_pipeline import (
+        CHUNKERS,
+        chunk_document,
+        retrieve_one,
+    )
+finally:
+    sys.dont_write_bytecode = _previous_bytecode_setting
 
 
 def get_embedding_model():
@@ -77,7 +85,7 @@ def build_uploaded_document(document):
         )
 
     return {
-        "document_id": document["filename"],
+        "document_id": document.get("document_id", document["filename"]),
         "title": document["filename"],
         "domain": "uploaded_document",
         "noise_level": "uploaded",

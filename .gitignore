@@ -24,4 +24,5 @@ uploads/
 # Local cache
 .cache/
 
-.streamlit/config.toml
+
+.streamlit/secrets.toml

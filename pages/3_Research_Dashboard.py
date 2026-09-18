@@ -1,10 +1,8 @@
 import streamlit as st
-import pandas as pd
 
 from services.results_service import (
     CHUNKER_LABELS,
     METRIC_LABELS,
-    NOISE_ORDER,
     get_experiment_summary,
     load_final_metrics,
     load_robustness_degradation,
@@ -14,43 +12,29 @@ from services.results_service import (
 )
 
 
-st.set_page_config(
-    page_title="Research Dashboard",
-    page_icon="📊",
-    layout="wide",
-)
-
-
-st.title("Research Dashboard")
-
-st.write(
-    "Results from the completed 4 × 4 chunking robustness "
-    "experiment on OHRBench."
-)
+from services.ui import setup
+setup("Research Dashboard", "📊")
+st.caption("Read-only snapshot from data/research_results. No experiments are run by this page.")
 
 
 try:
 
-    # =====================================================
-    # LOAD DATA
-    # =====================================================
+    # -------------------------------------------------
+    # Load saved experiment results
+    # -------------------------------------------------
 
     summary = get_experiment_summary()
-
     final_metrics = load_final_metrics()
-
+    final_metrics = final_metrics[final_metrics["evaluation_set"] == "primary"]
     robustness = load_robustness_degradation()
-
     sensitivity = load_sensitivity_metrics()
-
     efficiency = load_efficiency_metrics()
-
     statistics = load_statistical_results()
 
 
-    # =====================================================
+    # =================================================
     # EXPERIMENT SUMMARY
-    # =====================================================
+    # =================================================
 
     st.divider()
 
@@ -60,10 +44,8 @@ try:
 
     col1.metric(
         "Configurations",
-        (
-            f"{summary['completed_configurations']}"
-            f"/{summary['total_configurations']}"
-        ),
+        f"{summary['completed_configurations']}/"
+        f"{summary['total_configurations']}",
     )
 
     col2.metric(
@@ -95,26 +77,26 @@ try:
     )
 
     col3.metric(
-        "Model",
-        "all-MiniLM-L6-v2",
+        "Embedding Model",
+        summary["model"],
     )
 
 
-    # =====================================================
+    # =================================================
     # PRIMARY RETRIEVAL PERFORMANCE
-    # =====================================================
+    # =================================================
 
     st.divider()
 
     st.header("Primary Retrieval Performance")
 
     st.caption(
-        "Primary evaluation over 8,456 mapped OHRBench questions."
+        f"Results from the primary {summary['primary_qas']:,}-question evaluation."
     )
 
 
     selected_metric = st.selectbox(
-        "Retrieval metric",
+        "Select retrieval metric",
         options=[
             "hit_at_1",
             "hit_at_5",
@@ -122,6 +104,7 @@ try:
         ],
         format_func=lambda metric:
             METRIC_LABELS[metric],
+        key="primary_metric",
     )
 
 
@@ -171,30 +154,24 @@ try:
     )
 
 
-    display_performance = (
+    st.dataframe(
         performance_table
         .transpose()
-        .round(4)
+        .round(4),
+        width="stretch",
     )
 
 
-    st.dataframe(
-        display_performance,
-        use_container_width=True,
-    )
-
-
-    # =====================================================
+    # =================================================
     # ROBUSTNESS DEGRADATION
-    # =====================================================
+    # =================================================
 
     st.divider()
 
-    st.header("Robustness Degradation")
+    st.header("Robustness Under Severe Noise")
 
-
-    robustness_metric = st.selectbox(
-        "Degradation metric",
+    degradation_metric = st.selectbox(
+        "Select degradation metric",
         options=[
             "hit_at_1",
             "hit_at_5",
@@ -202,14 +179,24 @@ try:
         ],
         format_func=lambda metric:
             METRIC_LABELS[metric],
-        key="robustness_metric",
+        key="degradation_metric",
     )
 
 
     severe_degradation = robustness[
-        (robustness["evaluation_set"] == "primary")
-        & (robustness["noise_level"].astype(str) == "severe")
-        & (robustness["metric"] == robustness_metric)
+        (
+            robustness["evaluation_set"]
+            == "primary"
+        )
+        & (
+            robustness["noise_level"]
+            .astype(str)
+            == "severe"
+        )
+        & (
+            robustness["metric"]
+            == degradation_metric
+        )
     ].copy()
 
 
@@ -233,7 +220,7 @@ try:
     )
 
 
-    degradation_display = severe_degradation[
+    degradation_table = severe_degradation[
         [
             "Strategy",
             "clean_value",
@@ -244,7 +231,7 @@ try:
     ].copy()
 
 
-    degradation_display.columns = [
+    degradation_table.columns = [
         "Strategy",
         "Clean Score",
         "Severe Score",
@@ -253,14 +240,14 @@ try:
     ]
 
 
-    degradation_display[
+    degradation_table[
         [
             "Clean Score",
             "Severe Score",
             "Absolute Drop",
             "Relative Drop (%)",
         ]
-    ] = degradation_display[
+    ] = degradation_table[
         [
             "Clean Score",
             "Severe Score",
@@ -271,23 +258,23 @@ try:
 
 
     st.dataframe(
-        degradation_display,
-        use_container_width=True,
+        degradation_table,
+        width="stretch",
         hide_index=True,
     )
 
 
-    # =====================================================
+    # =================================================
     # EFFICIENCY
-    # =====================================================
+    # =================================================
 
     st.divider()
 
-    st.header("Efficiency and Index Growth")
+    st.header("Efficiency and Computational Cost")
 
 
     efficiency_metric = st.selectbox(
-        "Efficiency metric",
+        "Select efficiency metric",
         options=[
             "num_chunks",
             "total_configuration_time_min",
@@ -307,6 +294,7 @@ try:
             "index_size_mb":
                 "Index Size (MB)",
         }[metric],
+        key="efficiency_metric",
     )
 
 
@@ -356,7 +344,7 @@ try:
     )
 
 
-    efficiency_display = efficiency[
+    efficiency_table = efficiency[
         [
             "chunker",
             "noise_level",
@@ -368,21 +356,21 @@ try:
     ].copy()
 
 
-    efficiency_display["chunker"] = (
-        efficiency_display["chunker"]
+    efficiency_table["chunker"] = (
+        efficiency_table["chunker"]
         .astype(str)
         .map(CHUNKER_LABELS)
     )
 
 
-    efficiency_display["noise_level"] = (
-        efficiency_display["noise_level"]
+    efficiency_table["noise_level"] = (
+        efficiency_table["noise_level"]
         .astype(str)
         .str.title()
     )
 
 
-    efficiency_display.columns = [
+    efficiency_table.columns = [
         "Strategy",
         "Noise",
         "Chunks",
@@ -392,37 +380,42 @@ try:
     ]
 
 
-    efficiency_display[
-        "Runtime (min)"
-    ] = efficiency_display[
-        "Runtime (min)"
-    ].round(2)
+    efficiency_table["Runtime (min)"] = (
+        efficiency_table["Runtime (min)"]
+        .round(2)
+    )
 
 
-    efficiency_display[
+    efficiency_table[
         "Mean Query Latency (ms)"
-    ] = efficiency_display[
-        "Mean Query Latency (ms)"
-    ].round(3)
+    ] = (
+        efficiency_table[
+            "Mean Query Latency (ms)"
+        ]
+        .round(3)
+    )
 
 
-    efficiency_display[
+    efficiency_table[
         "Index Size (MB)"
-    ] = efficiency_display[
-        "Index Size (MB)"
-    ].round(1)
+    ] = (
+        efficiency_table[
+            "Index Size (MB)"
+        ]
+        .round(1)
+    )
 
 
     st.dataframe(
-        efficiency_display,
-        use_container_width=True,
+        efficiency_table,
+        width="stretch",
         hide_index=True,
     )
 
 
-    # =====================================================
+    # =================================================
     # SENSITIVITY ANALYSIS
-    # =====================================================
+    # =================================================
 
     st.divider()
 
@@ -431,13 +424,14 @@ try:
     )
 
     st.caption(
-        "Comparison of primary results with the stricter "
-        "5,277-question context-verified subset."
+        "Comparison between the primary evaluation "
+        f"and the stricter {summary['context_verified_qas']:,}-question "
+        "context-verified subset."
     )
 
 
     sensitivity_metric = st.selectbox(
-        "Sensitivity metric",
+        "Select sensitivity metric",
         options=[
             "hit_at_1",
             "hit_at_5",
@@ -450,7 +444,8 @@ try:
 
 
     primary_severe = final_metrics[
-        final_metrics["noise_level"].astype(str)
+        final_metrics["noise_level"]
+        .astype(str)
         == "severe"
     ][
         [
@@ -460,16 +455,19 @@ try:
     ].copy()
 
 
-    primary_severe = primary_severe.rename(
-        columns={
-            sensitivity_metric:
-                "Primary",
-        }
+    primary_severe = (
+        primary_severe.rename(
+            columns={
+                sensitivity_metric:
+                    "Primary"
+            }
+        )
     )
 
 
     context_severe = sensitivity[
-        sensitivity["noise_level"].astype(str)
+        sensitivity["noise_level"]
+        .astype(str)
         == "severe"
     ][
         [
@@ -479,11 +477,13 @@ try:
     ].copy()
 
 
-    context_severe = context_severe.rename(
-        columns={
-            sensitivity_metric:
-                "Context-Verified",
-        }
+    context_severe = (
+        context_severe.rename(
+            columns={
+                sensitivity_metric:
+                    "Context-Verified"
+            }
+        )
     )
 
 
@@ -524,13 +524,13 @@ try:
 
     st.dataframe(
         sensitivity_comparison,
-        use_container_width=True,
+        width="stretch",
     )
 
 
-    # =====================================================
+    # =================================================
     # BOOTSTRAP CONFIDENCE INTERVALS
-    # =====================================================
+    # =================================================
 
     st.divider()
 
@@ -548,13 +548,14 @@ try:
 
 
     selected_statistic = st.selectbox(
-        "Statistic",
-        available_statistics,
+        "Select statistic",
+        options=available_statistics,
+        key="bootstrap_statistic",
     )
 
 
     bootstrap_metric = st.selectbox(
-        "Bootstrap metric",
+        "Select bootstrap metric",
         options=[
             "hit_at_1",
             "hit_at_5",
@@ -567,7 +568,10 @@ try:
 
 
     bootstrap_rows = statistics[
-        (statistics["evaluation_set"] == "primary")
+        (
+            statistics["evaluation_set"]
+            == "primary"
+        )
         & (
             statistics["statistic"]
             == selected_statistic
@@ -593,7 +597,7 @@ try:
     )
 
 
-    bootstrap_display = bootstrap_rows[
+    bootstrap_table = bootstrap_rows[
         [
             "Strategy",
             "Noise",
@@ -605,7 +609,7 @@ try:
     ].copy()
 
 
-    bootstrap_display.columns = [
+    bootstrap_table.columns = [
         "Strategy",
         "Noise",
         "Estimate",
@@ -615,13 +619,13 @@ try:
     ]
 
 
-    bootstrap_display[
+    bootstrap_table[
         [
             "Estimate",
             "95% CI Low",
             "95% CI High",
         ]
-    ] = bootstrap_display[
+    ] = bootstrap_table[
         [
             "Estimate",
             "95% CI Low",
@@ -631,14 +635,13 @@ try:
 
 
     st.dataframe(
-        bootstrap_display,
-        use_container_width=True,
+        bootstrap_table,
+        width="stretch",
         hide_index=True,
     )
 
 
 except Exception as error:
 
-    st.error(
-        f"Could not load research dashboard: {error}"
-    )
+    from services.ui import show_error
+    show_error("Could not load the saved results. Check the six files in data/research_results against README.md.", error)
