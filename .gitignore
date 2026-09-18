@@ -1,0 +1,25 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Testing
+.pytest_cache/
+
+# Environment variables
+.env
+
+# Temporary uploads
+uploads/
+
+# Local cache
+.cache/
