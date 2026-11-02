@@ -1,5 +1,6 @@
 """Redis is delivery only; SQLite remains authoritative."""
 
+import logging
 import threading
 
 from celery import Celery, bootsteps
@@ -40,7 +41,7 @@ class Presence(bootsteps.StartStopStep):
                 try:
                     store.heartbeat(self.worker_id)
                 except Exception:
-                    worker.logger.exception("Worker presence heartbeat failed")
+                    logging.getLogger(__name__).exception("Worker presence heartbeat failed")
                 self.stop_event.wait(15)
 
         self.thread = threading.Thread(target=loop, daemon=True)

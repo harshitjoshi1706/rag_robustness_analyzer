@@ -11,7 +11,7 @@ from fastapi import FastAPI, Header, HTTPException, Query, Response
 from redis import Redis
 
 from .config import Settings
-from .contracts import JobRequest
+from .contracts import JobRequest, JobView, ResultsView, TaskView
 from .coordinator import serve
 from .db import CapacityError, ConflictError, Store
 from .inputs import freeze
@@ -34,7 +34,7 @@ def create_app(settings=None, dispatch=True):
         stop = threading.Event()
         thread = None
         if dispatch:
-            thread = threading.Thread(target=serve, args=(stop,), daemon=True)
+            thread = threading.Thread(target=serve, args=(stop, settings), daemon=True)
             thread.start()
         yield
         stop.set()
@@ -63,7 +63,7 @@ def create_app(settings=None, dispatch=True):
             raise HTTPException(404, "Job not found")
         return job
 
-    @api.post("/api/jobs", status_code=202)
+    @api.post("/api/jobs", status_code=202, response_model=JobView)
     def submit(request: JobRequest, idempotency_key: Annotated[str | None, Header(max_length=128)] = None):
         if request.mode in ("fixture", "smoke") and not settings.allow_fixture:
             raise HTTPException(403, "Engineering fixtures disabled")
@@ -79,20 +79,20 @@ def create_app(settings=None, dispatch=True):
             raise HTTPException(503, "Research inputs unavailable; see coordinator logs") from exc
         return store.job(job_id)
 
-    @api.get("/api/jobs")
+    @api.get("/api/jobs", response_model=list[JobView])
     def list_jobs(limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0)):
         return store.jobs(limit, offset)
 
-    @api.get("/api/jobs/{job_id}")
+    @api.get("/api/jobs/{job_id}", response_model=JobView)
     def get_job(job_id: str):
         return require_job(job_id)
 
-    @api.get("/api/jobs/{job_id}/tasks")
+    @api.get("/api/jobs/{job_id}/tasks", response_model=list[TaskView])
     def get_tasks(job_id: str):
         require_job(job_id)
         return store.tasks(job_id)
 
-    @api.get("/api/jobs/{job_id}/results")
+    @api.get("/api/jobs/{job_id}/results", response_model=ResultsView)
     def get_results(job_id: str):
         job = require_job(job_id)
         tasks = store.tasks(job_id)
@@ -104,7 +104,7 @@ def create_app(settings=None, dispatch=True):
             "results": [t["result"] for t in tasks if t["state"] == "COMPLETED"],
         }
 
-    @api.post("/api/jobs/{job_id}/cancel")
+    @api.post("/api/jobs/{job_id}/cancel", response_model=JobView)
     def cancel(job_id: str):
         require_job(job_id)
         if not store.cancel(job_id):

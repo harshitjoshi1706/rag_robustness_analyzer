@@ -64,3 +64,22 @@ class APITests(unittest.TestCase):
         self.assertIn('rag_attempts_total{state="COMPLETED"} 1.0', text)
         self.assertIn("rag_workers_available 1.0", text)
         self.assertNotIn(job["id"], text)
+
+    def test_active_resource_metrics_aggregate_persisted_worker_samples(self):
+        store = self.app.state.store
+        for memory, cpu in ((100, 50), (200, 75)):
+            job = self.client.post("/api/jobs", json=SPEC).json()
+            task = store.claim(store.tasks(job["id"])[0]["id"], f"worker-{memory}")
+            store.heartbeat(
+                f"worker-{memory}",
+                task["id"],
+                task["token"],
+                {
+                    "rss_bytes_sampled": memory,
+                    "cpu_percent_sampled": cpu,
+                },
+            )
+        with patch("redis.Redis.llen", return_value=0):
+            metrics = self.client.get("/metrics").text
+        self.assertIn("rag_active_evaluation_rss_bytes 300.0", metrics)
+        self.assertIn("rag_active_evaluation_cpu_cores 1.25", metrics)

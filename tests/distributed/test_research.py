@@ -90,3 +90,89 @@ class RealResearchRegressionTests(unittest.TestCase):
                         # Counts, metrics and per-question ranking identities are exact.
                         self.assertEqual(result[name], expected, (task["chunker"], name))
                 self.assertEqual(store.job(job)["state"], "COMPLETED")
+
+    def test_original_runner_contract_with_full_count_deterministic_fixture(self):
+        """Exercise the real run_configuration/CSV path without corpus inference.
+
+        QAs/vectors are explicitly test fixtures, not official research measurements.
+        Their frozen contract sizes exercise batch boundaries, schema and aggregation.
+        """
+        from unittest.mock import patch
+
+        import numpy as np
+
+        from platform_eval.research import execute, import_runner
+        from platform_eval.storage import atomic_json, publish_manifest
+
+        previous_cwd = Path.cwd()
+        try:
+            with (
+                tempfile.TemporaryDirectory() as directory,
+                patch.dict(
+                    os.environ,
+                    {
+                        "RAG_STORAGE": directory,
+                    },
+                ),
+            ):
+                settings = Settings()
+                runner = import_runner(settings)
+                qas = [
+                    {
+                        "query_id": f"test-{i:05}",
+                        "question": "test query",
+                        "doc_name": "test-document",
+                        "domain": "debug",
+                        "evidence_pages": [1],
+                        "context_verified": i < 5277,
+                    }
+                    for i in range(8456)
+                ]
+                runner.read_qas = lambda: (qas, [])
+                manifest = {"scope": "test-only-input-snapshot"}
+                from platform_eval.contracts import identity
+
+                fingerprint = identity(manifest)
+                cache = settings.storage / "cache/shared" / fingerprint
+                queries = cache / "queries"
+                queries.mkdir(parents=True)
+                vectors = np.zeros((8456, 384), dtype=np.float32)
+                vectors[:, 0] = 1
+                np.save(queries / "official_query_vectors.npy", vectors)
+                atomic_json(queries / "official_query_ids.json", [q["query_id"] for q in qas])
+                publish_manifest(
+                    queries, ["official_query_vectors.npy", "official_query_ids.json"], fingerprint
+                )
+                built = cache / "fixed_clean"
+                built.mkdir()
+                index = runner.create_index()
+                runner.add_vectors(index, vectors[:1])
+                runner.save_index(index, built / "index.faiss")
+                (built / "metadata.jsonl").write_text(
+                    json.dumps({"document_id": "test-document", "source_page_ids": [1]}) + "\n"
+                )
+                atomic_json(built / "ready.json", {"ntotal": 1, "dimension": 384, "run_id": runner.RUN_ID})
+                atomic_json(
+                    built / "profile.json",
+                    {"run_id": runner.RUN_ID, "chunker": "fixed", "noise_level": "clean"},
+                )
+                publish_manifest(
+                    built, ["index.faiss", "metadata.jsonl", "ready.json", "profile.json"], fingerprint
+                )
+                output = settings.storage / "test-output"
+                with (
+                    patch("platform_eval.research.snapshot", return_value=manifest),
+                    patch("platform_eval.research.import_runner", return_value=runner),
+                ):
+                    result = execute(
+                        settings, {"chunker": "fixed", "noise": "clean"}, fingerprint, output, "research"
+                    )
+                self.assertEqual(result["question_count"], 8456)
+                self.assertEqual(result["context_verified_count"], 5277)
+                self.assertEqual(result["hit_at_1"], 1.0)
+                self.assertEqual(result["mrr_at_100"], 1.0)
+                self.assertEqual(len(list((output / "parts").glob("batch_*.csv"))), 67)
+                self.assertTrue(result["cache_hit"])
+                self.assertFalse(list(output.rglob("*.tmp")))
+        finally:
+            os.chdir(previous_cwd)

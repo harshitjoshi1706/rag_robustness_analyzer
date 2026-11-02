@@ -16,17 +16,18 @@ def tick(settings, store, broker=None, publish=None):
     store.recover()
     broker = broker or Redis.from_url(settings.broker, socket_timeout=3, socket_connect_timeout=3)
     # Redis transport may create priority queues; priority is never enabled here.
-    if broker.llen("evaluation") >= settings.max_pending:
+    depth = broker.llen("evaluation")
+    if depth >= settings.max_pending:
         return
     publish = publish or (
         lambda task_id: app.send_task("platform_eval.evaluate", args=[task_id], task_id=task_id)
     )
-    for task_id in store.dispatch_due(limit=min(16, settings.max_pending)):
+    for task_id in store.dispatch_due(limit=min(16, settings.max_pending - depth)):
         publish(task_id)
 
 
-def serve(stop):
-    settings = Settings()
+def serve(stop, settings=None):
+    settings = settings or Settings()
     store = Store(settings)
     while not stop.is_set():
         try:

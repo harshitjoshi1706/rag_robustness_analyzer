@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 import psutil
 
@@ -35,10 +36,11 @@ def run_task(task_id, worker):
             "fingerprint": job["fingerprint"],
             "output": str(output),
             "mode": job["spec"]["mode"],
+            "cache_namespace": job["spec"].get("cache_namespace", "shared"),
         },
     )
     started = time.monotonic()
-    peak_rss = cpu_seconds = 0.0
+    peak_rss = cpu_seconds = cpu_percent = rss = 0.0
     child = None
     try:
         with (output / "execution.log").open("w") as log:
@@ -54,16 +56,27 @@ def run_task(task_id, worker):
                     "TOKENIZERS_PARALLELISM": "false",
                     "PYTHONDONTWRITEBYTECODE": "1",
                     "RAG_SUPERVISOR_PID": str(os.getpid()),
+                    "NLTK_DATA": str(Path(__file__).parent / "data"),
                 },
             )
             process = psutil.Process(child.pid)
             while child.poll() is None:
-                if not store.heartbeat(worker, task_id, task["token"]):
+                progress = {"stage": "starting"}
+                try:
+                    progress = json.loads((output / "progress.json").read_text())
+                except (OSError, ValueError):
+                    pass
+                progress["rss_bytes_sampled"] = int(rss)
+                progress["cpu_percent_sampled"] = cpu_percent
+                progress["published_query_batches"] = len(list((output / "parts").glob("batch_*.csv")))
+                if not store.heartbeat(worker, task_id, task["token"], progress):
                     raise RuntimeError("Task cancelled or fenced by recovery")
                 if time.monotonic() - started > settings.task_timeout:
                     raise TimeoutError("Evaluation exceeded configured wall-clock limit")
                 try:
-                    peak_rss = max(peak_rss, process.memory_info().rss)
+                    rss = process.memory_info().rss
+                    peak_rss = max(peak_rss, rss)
+                    cpu_percent = process.cpu_percent(None)
                     cpu = process.cpu_times()
                     cpu_seconds = max(cpu_seconds, cpu.user + cpu.system)
                 except psutil.NoSuchProcess:

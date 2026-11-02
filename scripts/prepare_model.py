@@ -17,7 +17,9 @@ source = snapshot_download(
     "sentence-transformers/all-MiniLM-L6-v2",
     revision=args.revision,
     local_files_only=args.offline,
-    ignore_patterns=["onnx/*", "openvino/*", "*.h5", "*.ot"],
+    ignore_patterns=["onnx/*", "openvino/*", "*.h5", "*.ot", "*.bin"],
 )
-shutil.copytree(source, args.output, ignore=shutil.ignore_patterns(".cache"))
+shutil.copytree(
+    source, args.output, ignore=shutil.ignore_patterns(".cache", "*.bin", "onnx", "openvino", "*.h5", "*.ot")
+)
 print(f"Prepared {args.output} from revision {args.revision}")

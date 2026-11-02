@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS tasks (
  chunker TEXT NOT NULL, noise TEXT NOT NULL, state TEXT NOT NULL,
  attempt INTEGER NOT NULL DEFAULT 0, token TEXT, worker TEXT, lease REAL,
  due REAL NOT NULL, dispatched REAL NOT NULL DEFAULT 0,
- result TEXT, error TEXT, UNIQUE(job_id,chunker,noise)
+ progress TEXT NOT NULL DEFAULT '{}', result TEXT, error TEXT, UNIQUE(job_id,chunker,noise)
 );
 CREATE INDEX IF NOT EXISTS tasks_due ON tasks(state,due,dispatched);
 CREATE TABLE IF NOT EXISTS attempts (
@@ -48,6 +48,11 @@ class Store:
         with sqlite3.connect(settings.database, timeout=30, isolation_level=None) as db:
             db.execute("PRAGMA journal_mode=WAL")
             db.executescript(SCHEMA)
+            db.execute("BEGIN IMMEDIATE")
+            columns = {row[1] for row in db.execute("PRAGMA table_info(tasks)")}
+            if "progress" not in columns:
+                db.execute("ALTER TABLE tasks ADD COLUMN progress TEXT NOT NULL DEFAULT '{}'")
+            db.commit()
 
     @contextmanager
     def connection(self, write=False):
@@ -130,6 +135,7 @@ class Store:
                 for row in db.execute("SELECT * FROM tasks WHERE job_id=? ORDER BY chunker,noise", (job_id,))
             ]
             for task in tasks:
+                task["progress"] = json.loads(task["progress"])
                 task["result"] = json.loads(task["result"]) if task["result"] else None
                 task["attempts"] = [
                     dict(row)
@@ -188,7 +194,7 @@ class Store:
             db.execute("UPDATE jobs SET state='RUNNING' WHERE id=?", (task["job_id"],))
             return {**dict(task), "attempt": number, "token": token, "worker": worker}
 
-    def heartbeat(self, worker, task_id=None, token=None):
+    def heartbeat(self, worker, task_id=None, token=None, progress=None):
         now = time.time()
         with self.connection(True) as db:
             db.execute(
@@ -198,8 +204,8 @@ class Store:
             if task_id:
                 return (
                     db.execute(
-                        "UPDATE tasks SET lease=? WHERE id=? AND token=? AND state='RUNNING'",
-                        (now + self.settings.lease_seconds, task_id, token),
+                        "UPDATE tasks SET lease=?,progress=? WHERE id=? AND token=? AND state='RUNNING' AND lease>?",
+                        (now + self.settings.lease_seconds, json.dumps(progress or {}), task_id, token, now),
                     ).rowcount
                     == 1
                 )

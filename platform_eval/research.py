@@ -59,7 +59,7 @@ def validate_result(result, task, fingerprint, expected_count):
     return result
 
 
-def execute(settings, task, fingerprint, output, mode):
+def execute(settings, task, fingerprint, output, mode, cache_namespace="shared"):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     if identity(snapshot(settings, mode)) != fingerprint:
@@ -81,14 +81,15 @@ def execute(settings, task, fingerprint, output, mode):
         atomic_json(output / "result.json", result)
         publish_manifest(output, ["result.json"], fingerprint)
         return result
+    atomic_json(output / "progress.json", {"stage": "loading_research"})
     runner = import_runner(settings)
     if mode == "smoke":
         if not settings.allow_fixture:
             raise ValueError("Engineering smoke corpus disabled")
         from .smoke import execute_smoke
 
-        return execute_smoke(settings, task, fingerprint, output, runner)
-    cache_root = settings.storage / "cache" / fingerprint
+        return execute_smoke(settings, task, fingerprint, output, runner, cache_namespace)
+    cache_root = settings.storage / "cache" / cache_namespace / fingerprint
     cache_root.mkdir(parents=True, exist_ok=True)
     cache = cache_root / f"{task['chunker']}_{task['noise']}"
     runner.INDEXES = cache_root / "queries"
@@ -112,6 +113,7 @@ def execute(settings, task, fingerprint, output, mode):
         return model
 
     runner.load_embedding_model = load_model
+    atomic_json(output / "progress.json", {"stage": "preparing_query_vectors"})
     with FileLock(str(cache_root / "queries.lock"), timeout=settings.task_timeout):
         if not valid_manifest(runner.INDEXES, fingerprint, QUERY_FILES):
             quarantine(runner.INDEXES)
@@ -126,6 +128,7 @@ def execute(settings, task, fingerprint, output, mode):
         "profile": cache / "profile.json",
         "parts": output / "parts",
     }
+    atomic_json(output / "progress.json", {"stage": "preparing_index"})
     with FileLock(str(cache_root / (cache.name + ".lock")), timeout=settings.task_timeout):
         hit = valid_manifest(cache, fingerprint, CACHE_FILES)
         if not hit:
@@ -139,6 +142,7 @@ def execute(settings, task, fingerprint, output, mode):
     runner.paths_for = lambda key: paths
     model = None
     runner.load_embedding_model = original_loader
+    atomic_json(output / "progress.json", {"stage": "retrieving", "total_query_batches": 67})
     runner.run_configuration(task["chunker"], task["noise"])
     count = verified = 0
     sums = [0.0, 0.0, 0.0]

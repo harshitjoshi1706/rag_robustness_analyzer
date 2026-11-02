@@ -1,5 +1,6 @@
 """Global measurements come from persistent metadata, across worker processes."""
 
+import json
 import time
 
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, generate_latest
@@ -46,6 +47,21 @@ class Metrics:
             )
             for row in db.execute("SELECT finished-created FROM jobs WHERE finished IS NOT NULL"):
                 jobs.observe(row[0])
+            resources = [
+                json.loads(row[0]) for row in db.execute("SELECT progress FROM tasks WHERE state='RUNNING'")
+            ]
+            memory = Gauge(
+                "rag_active_evaluation_rss_bytes",
+                "Sum of sampled active evaluation child RSS",
+                registry=registry,
+            )
+            memory.set(sum(p.get("rss_bytes_sampled", 0) for p in resources))
+            cpu = Gauge(
+                "rag_active_evaluation_cpu_cores",
+                "Sum of sampled active evaluation CPU percent / 100",
+                registry=registry,
+            )
+            cpu.set(sum(p.get("cpu_percent_sampled", 0) for p in resources) / 100)
             workers = Gauge("rag_workers_available", "Workers seen within 45 seconds", registry=registry)
             workers.set(
                 db.execute("SELECT count(*) FROM workers WHERE seen>?", (time.time() - 45,)).fetchone()[0]

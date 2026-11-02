@@ -8,13 +8,13 @@ from filelock import FileLock
 from .storage import atomic_json, publish_manifest, valid_manifest
 
 
-def execute_smoke(settings, task, fingerprint, output, runner):
+def execute_smoke(settings, task, fingerprint, output, runner, cache_namespace="shared"):
     import numpy as np
     from sentence_transformers import SentenceTransformer
 
     fixture = json.loads((Path(__file__).parent / "data/smoke.json").read_text())
     qas = fixture["qas"]
-    root = settings.storage / "cache" / fingerprint
+    root = settings.storage / "cache" / cache_namespace / fingerprint
     root.mkdir(parents=True, exist_ok=True)
     directory = root / task["chunker"]
     files = ["index.faiss", "chunks.json"]
