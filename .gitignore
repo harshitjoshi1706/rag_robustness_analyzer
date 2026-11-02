@@ -26,3 +26,7 @@ uploads/
 
 
 .streamlit/secrets.toml
+
+# Distributed runtime artifacts and model snapshot
+var/
+.ruff_cache/

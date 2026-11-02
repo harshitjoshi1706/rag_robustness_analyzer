@@ -1,0 +1,119 @@
+{
+  "scope": "debug corpus; never OHRBench results",
+  "documents": [
+    {
+      "document_id": "astronomy",
+      "title": "astronomy",
+      "domain": "debug",
+      "noise_level": "clean",
+      "paragraphs": [
+        {
+          "paragraph_id": "PAGE_1",
+          "page_idx": 1,
+          "text": "# Astronomy\n\nThe lunar observatory tracks the Moon with a radio telescope. Its instruments measure craters and reflected sunlight. Astronomers record observations at midnight and calibrate sensors using distant stars. The observatory stores images in an archive for later analysis."
+        },
+        {
+          "paragraph_id": "PAGE_2",
+          "page_idx": 2,
+          "text": "## Field notes\n\nThe lunar observatory tracks the Moon with a radio telescope. Its instruments measure craters and reflected sunlight. Astronomers record observations at midnight and calibrate sensors using distant stars. The observatory stores images in an archive for later analysis. The lunar observatory tracks the Moon with a radio telescope. Its instruments measure craters and reflected sunlight. Astronomers record observations at midnight and calibrate sensors using distant stars. The observatory stores images in an archive for later analysis. The lunar observatory tracks the Moon with a radio telescope. Its instruments measure craters and reflected sunlight. Astronomers record observations at midnight and calibrate sensors using distant stars. The observatory stores images in an archive for later analysis."
+        }
+      ]
+    },
+    {
+      "document_id": "botany",
+      "title": "botany",
+      "domain": "debug",
+      "noise_level": "clean",
+      "paragraphs": [
+        {
+          "paragraph_id": "PAGE_1",
+          "page_idx": 1,
+          "text": "# Botany\n\nThe greenhouse grows tomatoes in nutrient rich soil. Gardeners water the roots every morning and monitor humidity with electronic sensors. Tomato plants require sunlight for photosynthesis. The harvest is collected in summer and delivered to the village market."
+        },
+        {
+          "paragraph_id": "PAGE_2",
+          "page_idx": 2,
+          "text": "## Field notes\n\nThe greenhouse grows tomatoes in nutrient rich soil. Gardeners water the roots every morning and monitor humidity with electronic sensors. Tomato plants require sunlight for photosynthesis. The harvest is collected in summer and delivered to the village market. The greenhouse grows tomatoes in nutrient rich soil. Gardeners water the roots every morning and monitor humidity with electronic sensors. Tomato plants require sunlight for photosynthesis. The harvest is collected in summer and delivered to the village market. The greenhouse grows tomatoes in nutrient rich soil. Gardeners water the roots every morning and monitor humidity with electronic sensors. Tomato plants require sunlight for photosynthesis. The harvest is collected in summer and delivered to the village market."
+        }
+      ]
+    },
+    {
+      "document_id": "transport",
+      "title": "transport",
+      "domain": "debug",
+      "noise_level": "clean",
+      "paragraphs": [
+        {
+          "paragraph_id": "PAGE_1",
+          "page_idx": 1,
+          "text": "# Transport\n\nThe electric railway connects the harbor to the city center. Trains depart every fifteen minutes during daylight. Passengers purchase tickets at the station. Engineers inspect the brakes each evening and charge the battery overnight at the depot."
+        },
+        {
+          "paragraph_id": "PAGE_2",
+          "page_idx": 2,
+          "text": "## Field notes\n\nThe electric railway connects the harbor to the city center. Trains depart every fifteen minutes during daylight. Passengers purchase tickets at the station. Engineers inspect the brakes each evening and charge the battery overnight at the depot. The electric railway connects the harbor to the city center. Trains depart every fifteen minutes during daylight. Passengers purchase tickets at the station. Engineers inspect the brakes each evening and charge the battery overnight at the depot. The electric railway connects the harbor to the city center. Trains depart every fifteen minutes during daylight. Passengers purchase tickets at the station. Engineers inspect the brakes each evening and charge the battery overnight at the depot."
+        }
+      ]
+    },
+    {
+      "document_id": "ocean",
+      "title": "ocean",
+      "domain": "debug",
+      "noise_level": "clean",
+      "paragraphs": [
+        {
+          "paragraph_id": "PAGE_1",
+          "page_idx": 1,
+          "text": "# Ocean\n\nThe marine laboratory studies coral reefs in tropical waters. Divers photograph fish and collect water samples to measure salinity. Reef ecosystems shelter young animals from predators. Researchers publish monthly reports about ocean temperatures and conservation efforts."
+        },
+        {
+          "paragraph_id": "PAGE_2",
+          "page_idx": 2,
+          "text": "## Field notes\n\nThe marine laboratory studies coral reefs in tropical waters. Divers photograph fish and collect water samples to measure salinity. Reef ecosystems shelter young animals from predators. Researchers publish monthly reports about ocean temperatures and conservation efforts. The marine laboratory studies coral reefs in tropical waters. Divers photograph fish and collect water samples to measure salinity. Reef ecosystems shelter young animals from predators. Researchers publish monthly reports about ocean temperatures and conservation efforts. The marine laboratory studies coral reefs in tropical waters. Divers photograph fish and collect water samples to measure salinity. Reef ecosystems shelter young animals from predators. Researchers publish monthly reports about ocean temperatures and conservation efforts."
+        }
+      ]
+    }
+  ],
+  "qas": [
+    {
+      "query_id": "debug-0",
+      "question": "What instrument does the lunar observatory use?",
+      "doc_name": "astronomy",
+      "evidence_pages": [
+        1,
+        2
+      ],
+      "context_verified": true
+    },
+    {
+      "query_id": "debug-1",
+      "question": "When do gardeners water the tomato roots?",
+      "doc_name": "botany",
+      "evidence_pages": [
+        1,
+        2
+      ],
+      "context_verified": true
+    },
+    {
+      "query_id": "debug-2",
+      "question": "How often do the electric trains depart?",
+      "doc_name": "transport",
+      "evidence_pages": [
+        1,
+        2
+      ],
+      "context_verified": true
+    },
+    {
+      "query_id": "debug-3",
+      "question": "Why do divers collect water samples?",
+      "doc_name": "ocean",
+      "evidence_pages": [
+        1,
+        2
+      ],
+      "context_verified": true
+    }
+  ]
+}
