@@ -53,6 +53,14 @@ def get_embedding_model():
     """
     Load the same embedding model used in the research experiment.
     """
+    model_path = os.environ.get("RAG_MODEL_PATH")
+    if model_path:
+        from sentence_transformers import SentenceTransformer
+        model = SentenceTransformer(model_path, device="cpu", local_files_only=True)
+        model.eval()
+        if model.get_embedding_dimension() != 384:
+            raise ValueError("Expected the research 384-dimensional MiniLM model")
+        return model
     return load_embedding_model(device="cpu")
 
 
