@@ -4,6 +4,8 @@ A Streamlit application for PDF retrieval and the completed OHRBench chunking ro
 
 The distributed page submits jobs to FastAPI, Redis and Celery, backed by persistent fenced metadata and content-validated artifacts. Start with one CPU worker on an 8 GB Mac. No cloud deployment or paid LLM service is configured.
 
+Phase status, acceptance gates and milestone evidence: [PROGRESS.md](PROGRESS.md).
+
 See [repository audit and architecture](docs/architecture.md), [platform startup, API, scaling, recovery, monitoring, benchmarks and CI](docs/operations.md), and [executed validation and limitations](docs/validation.md).
 
 ```sh
