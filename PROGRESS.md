@@ -26,7 +26,7 @@ a benchmark measurement, multi-host scaling, or successful GitHub-hosted CI.
 | 4 | FastAPI backend | COMPLETED | API validation, state/results/cancellation/readiness/metrics tests passed |
 | 5 | Streamlit integration | COMPLETED | Existing pages/tests preserved; distributed submission/progress and outage handling tested |
 | 6 | Docker, observability and benchmarking | IN PROGRESS | Stack and monitoring verified; real 1/2/4-worker benchmark measurements pending |
-| 7 | Automated tests and GitHub Actions | IN PROGRESS | Local suites and integration passed; feature branch pushed; first hosted run failed; corrections in validation |
+| 7 | Automated tests and GitHub Actions | COMPLETED | Hosted Linux AMD64 run 41588927745 passed all required checks; dependency audit retains one report-only advisory |
 
 Phases 2–5 were implemented and validated while the longer scientific/measurement
 acceptance gates remain open. Their completion does not close Phase 1 or Phase 6.
@@ -154,11 +154,12 @@ acceptance gates remain open. Their completion does not close Phase 1 or Phase 6
 - **Current blockers/open gate:** actual OHRBench cold/warm 1/2/4-worker measurements
   remain pending. Four 2 GiB workers plus services exceed the 8 GB target machine's
   physical RAM budget. Heavy benchmarks are opt-in; no synthetic throughput or
-  unmeasured speedup is reported. Linux AMD64 validation is pending hosted CI.
-- **Next planned phase:** Phase 7 hosted validation continues independently; return
-  to measured scaling on suitable hardware using an identical controlled workload.
+  unmeasured speedup is reported. Linux AMD64 build, service startup and regression
+  validation have now passed in hosted run `41588927745`; measurements remain pending.
+- **Next planned phase:** Phase 7 hosted validation is now completed; return to
+  measured scaling on suitable hardware using an identical controlled workload.
 
-## Phase 7 — Automated tests and GitHub Actions — IN PROGRESS
+## Phase 7 — Automated tests and GitHub Actions — COMPLETED
 
 - **Files created/modified:** `.github/workflows/ci.yml`, `pyproject.toml`,
   `requirements-dev.txt`, `requirements-lock.txt`, security-updated requirement files,
@@ -175,30 +176,40 @@ acceptance gates remain open. Their completion does not close Phase 1 or Phase 6
   example payloads omitted from the retained baseline report; IDs/fixes retained.
   Dependency audit reduced **55 findings to 1** NLTK advisory with no listed fix;
   audit exits **1**, not a clean security pass. Workflow YAML parsed successfully.
-- **Git commits:** `559886e`, `dacb5bd`, `ade4a99`, `e8ea766`.
+- **Git commits:** `559886e`, `dacb5bd`, `ade4a99`, `e8ea766`, `8026343` (hosted CI fixes).
   Tracker-introduction commit: `a2e93a2` (pushed). Subsequent tracker commits can
   be located with `git log --oneline -- PROGRESS.md`.
-- **Current blockers/open gate:** first hosted workflow failed at lint cache permissions; downstream required tests
-  were skipped and do not count as passing.
-  Source inspection identified a fresh-checkout model bind-directory issue; the
-  corrected standalone Docker preparation passed locally as a non-root user, with
-  every frozen model hash matching. Hosted validation of that change is pending. The
-  remaining NLTK advisory is documented in `docs/validation.md`; no fixed version was
-  listed at the recorded audit. The affected model import/export APIs are not exposed.
-- **Next planned phase:** commit and push progress to the feature branch, observe
-  GitHub Actions, fix reproducible CI failures and update this tracker at milestones.
-  Do not mark COMPLETED merely because a workflow file exists or a push succeeded.
+- **Hosted tests executed/results:** [run 41588927745](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588927745)
+  completed with **success** for commit `8026343e3bcd362ef2ac3f64f79a5dd006a7cc6e`.
+  Linux AMD64 CPU build, Compose validation, lint/format and fresh model preparation
+  passed. **24 platform tests passed** in 73.229 seconds, plus **6 lightweight
+  original research tests** (2 metrics, 1 runner-resume, 3 semantic tests). Actual
+  Redis/Celery integration, duplicate delivery, failed-child retry, stale-owner
+  recovery, real four-chunker frozen rankings, worker-container loss (attempt 2),
+  coordinator restart, Gitleaks, diagnostics upload and service cleanup passed.
+  The report-only dependency audit still exited **1** for the single documented
+  NLTK advisory; workflow success is not a zero-vulnerability claim.
+- **Current blockers:** none for Phase 7 CI acceptance. First-run lint/diagnostic
+  permission failures remain recorded below. The model-preparation and cache fixes
+  were validated locally and in the successful hosted run. The unchanged NLTK
+  advisory remains a maintenance item; its affected model-path APIs are not exposed.
+- **Next planned phase:** return to Phase 1 official-corpus equivalence validation
+  and Phase 6 measured 1/2/4-worker benchmarking under the original practical-resource
+  constraints. Do not infer either result from passing diagnostic CI. No new phase,
+  automatic merge, image publication or cloud deployment is authorized by this status.
 
 ## Milestone log
 
 | Date (Asia/Kolkata) | Milestone | Evidence / status |
 | --- | --- | --- |
 | 2–3 Nov 2026 | Initial implementation and local acceptance testing | Commits `2bdf46d` through `e8ea766`; historical evidence reconstructed above |
-| 3 Nov 2026 | Progress tracker introduced after additional instruction | Earlier timing is not backdated; Phase 1/6/7 remain IN PROGRESS |
-| 3 Nov 2026 | First hosted CI failed | [Run 41588188213](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588188213) built Linux AMD64 CPU image and validated Compose, then Ruff could not write `/app/.ruff_cache`; diagnostics also encountered a root-owned `var` directory. Remaining tests skipped. Fix: standalone no-cache lint and model preparation before Compose mounts |
-| 3 Nov 2026 | Phase 7 CI preparation milestone | Fresh-directory, non-root standalone Docker model preparation passed against all frozen model hashes; workflow YAML and tracker structure checks passed. Push filters exclude progress-only updates while retaining PR validation |
-| 3 Nov 2026 | Tracker and implementation pushed | `a2e93a2` on feature branch; [hosted run 41588188213](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588188213) started, not yet passed |
+| 3 Nov 2026 | Progress tracker introduced after additional instruction | Earlier timing is not backdated; Phase 1/6/7 were IN PROGRESS at introduction |
 | 3 Nov 2026 | GitHub branch read access checked | Unsandboxed `git ls-remote --heads origin feature/distributed-evaluation-platform` succeeded; branch did not yet exist |
+| 3 Nov 2026 | Tracker and implementation pushed | `a2e93a2` on feature branch; [hosted run 41588188213](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588188213) started, not yet passed |
+| 3 Nov 2026 | Phase 7 CI preparation milestone | Fresh-directory, non-root standalone Docker model preparation passed against all frozen model hashes; workflow YAML and tracker structure checks passed. Push filters exclude progress-only updates while retaining PR validation |
+| 3 Nov 2026 | First hosted CI failed | [Run 41588188213](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588188213) built Linux AMD64 CPU image and validated Compose, then Ruff could not write `/app/.ruff_cache`; diagnostics also encountered a root-owned `var` directory. Remaining tests skipped. Fix: standalone no-cache lint and model preparation before Compose mounts |
+| 3 Nov 2026 | Second hosted CI advanced | Commit `8026343`, [run 41588927745](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588927745): AMD64 build, standalone no-cache lint/format and fresh model preparation passed; required tests still running |
+| 3 Nov 2026 | Phase 7 completed after hosted acceptance passed | [Run 41588927745](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588927745), commit `8026343`, succeeded at 11:52 IST. All required tests/checks passed; one report-only dependency advisory remains. Final status update is documentation-only, so it does not trigger or cancel another push workflow |
 
 ## Operating rules for subsequent milestones
 

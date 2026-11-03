@@ -75,9 +75,12 @@ is configured or performed.
 
 Exact reproducible commands, test durations, corrected implementation/test-harness
 issues, advisory details and machine-readable reports are linked in validation.md.
-Tests were actually executed locally; **GitHub-hosted CI has not been run**. Linux
-AMD64 image execution remains unvalidated. CI YAML was parsed and the substantive
-build/test/integration commands were exercised locally.
+The original handoff contained local-only evidence. Subsequently, [GitHub-hosted
+run 41588927745](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588927745)
+passed for commit `8026343`, including the Linux AMD64 build, 24 platform tests,
+six original lightweight research tests, real integration/recovery, secret scanning
+and diagnostics. The one NLTK audit finding remains report-only and is not fixed.
+Current milestones and the corrected first-run failure are in PROGRESS.md.
 
 ## Benchmarks and known limitations
 
@@ -135,9 +138,9 @@ existing official parquet/annotation files for real OHRBench jobs.
 
 ## Exact continuation plan
 
-1. Review and push with `git push -u origin feature/distributed-evaluation-platform`
-   when ready, then observe GitHub-hosted CI and
-   retain its logs. No pull request/merge or remote action is assumed complete.
+1. The feature branch is now pushed and hosted validation passed for `8026343`.
+   Review its workflow logs and branch changes before any separately requested PR
+   or merge; neither has been created or performed.
 2. On suitable hardware, submit one official configuration and compare its committed
    per-question CSVs/aggregate metrics against the immutable sequential baseline.
    Investigate any ranking/count difference; never regenerate golden files merely
@@ -168,12 +171,12 @@ existing official parquet/annotation files for real OHRBench jobs.
 | 1/2/4-worker benchmark scripts | Implemented; real measurements pending |
 | Sequential scientific equivalence | Frozen small-corpus rankings/metrics passed; full official corpus comparison pending |
 | Unit/integration tests | 24 platform tests + 28 original research tests passed |
-| GitHub Actions | Implemented/local commands validated; hosted execution pending |
+| GitHub Actions | Hosted Linux AMD64 workflow passed for `8026343`; one report-only NLTK audit finding remains |
 | Documentation | Audit, operation, testing, limits, continuation and delivery records supplied |
 | No cloud deployment | Confirmed; no image publishing or external infrastructure creation |
 
 **Not every acceptance criterion is fully validated.** The pending full official
-numerical comparison, measured scaling and hosted CI are explicitly outstanding;
+numerical comparison and measured scaling are explicitly outstanding;
 the implemented local platform and documented tests are complete.
 
 ## Resume bullets supported by executed evidence
@@ -188,7 +191,8 @@ the implemented local platform and documented tests are complete.
   GitHub Actions for CPU-image, regression, integration and security validation.
 
 These bullets intentionally make no measured speedup, multi-host scale, cloud
-production deployment or successful GitHub-hosted CI claim.
+or production cloud deployment claim. A subsequent hosted CI pass is recorded above;
+no measured scaling claim follows from it.
 
 ## All changed and created files
 
@@ -198,6 +202,7 @@ production deployment or successful GitHub-hosted CI claim.
 - [.gitleaks.toml](../.gitleaks.toml)
 - [.gitleaksignore](../.gitleaksignore)
 - [Dockerfile](../Dockerfile)
+- [PROGRESS.md](../PROGRESS.md)
 - [README.md](../README.md)
 - [compose.yaml](../compose.yaml)
 - [docs/architecture.md](../docs/architecture.md)

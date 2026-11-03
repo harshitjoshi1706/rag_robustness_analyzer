@@ -107,3 +107,39 @@ report now omits advisory descriptions/PoCs while retaining all package versions
 advisory IDs, aliases and fixes. `.gitleaksignore` allows only the three exact public
 hash locations; source scanning remains blocking. CI passes that ignore path
 explicitly. This does not suppress actual credential findings or entire source files.
+
+
+## Hosted CI milestone — 3 November 2026 (Asia/Kolkata)
+
+The feature branch was pushed after the additional progress-tracking instruction.
+The first [hosted run 41588188213](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588188213)
+passed the Linux AMD64 CPU image build and Compose validation, then failed when Ruff
+attempted to create `/app/.ruff_cache`. Diagnostics also failed because an early
+Compose mount created a root-owned host `var` directory. Downstream tests were
+skipped, not passed. Commit `8026343` fixed this by using standalone no-cache Docker
+lint and standalone non-root model preparation before Compose binds are mounted.
+An isolated fresh-directory local preparation matched every frozen model hash.
+
+The corrected [hosted run 41588927745](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588927745)
+passed on commit `8026343e3bcd362ef2ac3f64f79a5dd006a7cc6e`, from 11:47 to 11:52 IST:
+
+- Linux AMD64 CPU image build, Compose configuration, lint and formatting passed.
+- Fresh pinned MiniLM model preparation passed; no full OHRBench dataset downloaded.
+- All **24 platform tests passed in 73.229 seconds**, including real cold/warm
+  MiniLM/FAISS frozen ranking regression and the labelled full-count runner fixture.
+- Six original lightweight research tests passed: two metric tests, one runner-resume
+  test and three semantic tests. This is separate from the 28-test local full suite.
+- All services started healthy. Actual Redis/Celery delivery, duplicate handling,
+  failed-child retry, stale-owner recovery and real four-chunker comparisons passed.
+- Actual worker-container loss recovered on attempt 2 (job
+  `bbe644ae-0d23-4c34-9e4b-efe049d82a15`). Coordinator stop/start recovered pending
+  work (job `e36bd96f-0701-4ca8-8155-80f28182fe7f`).
+- Gitleaks found no leaks. Diagnostics and artifacts uploaded; containers stopped.
+- The **report-only dependency audit exited 1** for one known NLTK advisory. Its
+  continue-on-error policy permits workflow success; the advisory is not claimed fixed.
+
+The hosted CI and Linux AMD64 gaps listed in the original handoff are now closed.
+Full official-corpus numerical equivalence and real scaling measurements remain
+pending. [PROGRESS.md](../PROGRESS.md) is the current phase/status record. Push
+workflows ignore progress/README/docs-only changes so milestone commits do not
+cancel real validation; pull-request validation remains enabled.
