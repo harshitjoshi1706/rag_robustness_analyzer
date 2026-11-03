@@ -108,3 +108,11 @@ Metrics derive global task/attempt/worker counts and durations from persistent D
 so Celery prefork counters are not mistaken for system totals. API latency is local
 to the single API process. Labels are bounded, never job IDs. Retry counters include
 lease-expiry recovery. Workers send idle heartbeat via a Celery bootstep.
+
+## Completed implementation notes
+
+The adapter also freezes the local baseline corpus/QA and core model/tokenizer
+bytes in `platform_eval/data/scientific_baseline.json`. Non-numerical support-library
+security updates are explicit in operations.md; original numerical packages remain
+pinned. Persistent progress includes stage, committed query batches and resource
+samples. The execution and validation record is in validation.md.

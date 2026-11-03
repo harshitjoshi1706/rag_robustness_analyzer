@@ -1,10 +1,22 @@
 # RAG Robustness Analyzer
 
-A Streamlit-only application for exploring PDF retrieval and the completed OHRBench chunking robustness experiment. It returns evidence passages, not generated answers. No API server, frontend build, or paid LLM API is required.
+A Streamlit application for PDF retrieval and the completed OHRBench chunking robustness experiment, now with an optional local distributed evaluation platform. Existing PDF and saved research pages still run independently. Retrieval returns evidence passages, not generated answers.
+
+The distributed page submits jobs to FastAPI, Redis and Celery, backed by persistent fenced metadata and content-validated artifacts. Start with one CPU worker on an 8 GB Mac. No cloud deployment or paid LLM service is configured.
+
+See [repository audit and architecture](docs/architecture.md), [platform startup, API, scaling, recovery, monitoring, benchmarks and CI](docs/operations.md), and [executed validation and limitations](docs/validation.md).
+
+```sh
+# Existing Python environment; prepare the frozen model once.
+.venv/bin/python scripts/prepare_model.py --offline
+./scripts/local.sh start 1
+# Streamlit: localhost:8501; API docs: localhost:8000/docs
+# Grafana: localhost:3000/d/rag-local; Prometheus: localhost:9090
+```
 
 ## Setup and run
 
-Tested locally with Python 3.11 and Streamlit 1.64.0 on macOS. The full dependency snapshot is retained in `requirements.txt` to preserve the working research integration. Other platforms may require compatible PyTorch/FAISS wheels; a fresh cross-platform installation has not been validated.
+Tested locally with Python 3.11 and Streamlit 1.66.1 on macOS. The full dependency snapshot is retained in `requirements.txt` with support-library security updates; numerical research package versions are preserved. Other platforms may require compatible PyTorch/FAISS wheels; a fresh cross-platform installation has not been validated.
 
 ```bash
 cd /path/to/rag_robustness_analyzer
@@ -65,6 +77,11 @@ pages/
   1_Single_Retrieval.py         Single-strategy entrypoint
   2_Compare_Chunkers.py         Four-strategy entrypoint
   3_Research_Dashboard.py       Saved experiment visualization
+  4_Distributed_Evaluation.py   HTTP job submission and polling
+platform_eval/                 Coordinator, state, workers and artifact adapters
+compose.yaml                   Local services, persistent volumes and limits
+monitoring/                    Prometheus and provisioned Grafana dashboards
+.github/workflows/ci.yml        Local build/test integration, no cloud release
 services/
   ui.py                        Shared navigation, errors, evidence rendering
   live_ui.py                   Session lifecycle, indexing and search UI
@@ -105,7 +122,7 @@ The suite checks PDF identity and rejection paths, saved result loading, all pag
 ## Limits and troubleshooting
 
 - Maximum upload size is 50 MB. Scanned/image-only PDFs require external OCR. Password-protected or malformed PDFs are rejected with a recoverable error.
-- Large PDFs and semantic chunking can take time and substantial RAM. Processing is synchronous; there is no background queue or cancellation control.
+- Live PDF indexing remains synchronous and session-local. Distributed evaluation jobs use the separate API queue with cancellation and retries. Large PDFs and semantic chunking can consume substantial RAM.
 - If a backend is missing, set `RAG_RESEARCH_ROOT` and install full dependencies. Home and the dashboard remain usable.
 - If model loading fails, check connectivity or the local Hugging Face cache, then retry. Errors include an expandable technical detail panel.
 - If saved results fail to load, restore the six artifacts above with their original schemas. The app never repairs, fabricates, or overwrites research results.
