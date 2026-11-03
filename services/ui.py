@@ -12,6 +12,7 @@ def setup(title, icon="🔎"):
         st.page_link("pages/1_Single_Retrieval.py", label="Single Retrieval", icon="🔎")
         st.page_link("pages/2_Compare_Chunkers.py", label="Compare Chunkers", icon="⚖️")
         st.page_link("pages/3_Research_Dashboard.py", label="Research Dashboard", icon="📊")
+        st.page_link("pages/4_Distributed_Evaluation.py", label="Distributed Evaluation", icon="🧩")
         st.divider()
         st.caption("Explore a PDF or inspect the completed research experiment.")
     st.title(title)

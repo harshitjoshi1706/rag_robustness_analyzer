@@ -1,0 +1,1104 @@
+{
+  "dependencies": [
+    {
+      "name": "altair",
+      "version": "6.3.0",
+      "vulns": []
+    },
+    {
+      "name": "amqp",
+      "version": "5.4.2",
+      "vulns": []
+    },
+    {
+      "name": "annotated-doc",
+      "version": "0.0.5",
+      "vulns": []
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.8.0",
+      "vulns": []
+    },
+    {
+      "name": "anyio",
+      "version": "4.15.1",
+      "vulns": []
+    },
+    {
+      "name": "attrs",
+      "version": "26.1.0",
+      "vulns": []
+    },
+    {
+      "name": "billiard",
+      "version": "4.3.2",
+      "vulns": []
+    },
+    {
+      "name": "celery",
+      "version": "5.6.3",
+      "vulns": []
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22",
+      "vulns": [
+        {
+          "id": "PYSEC-2026-4320",
+          "fix_versions": [
+            "2026.10.18"
+          ],
+          "aliases": [
+            "GHSA-6q48-6c7w-9gw2"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.1",
+      "vulns": []
+    },
+    {
+      "name": "click",
+      "version": "8.5.0",
+      "vulns": []
+    },
+    {
+      "name": "click-didyoumean",
+      "version": "0.3.1",
+      "vulns": []
+    },
+    {
+      "name": "click-plugins",
+      "version": "1.1.1.2",
+      "vulns": []
+    },
+    {
+      "name": "click-repl",
+      "version": "0.4.1",
+      "vulns": []
+    },
+    {
+      "name": "cloudpickle",
+      "version": "3.1.2",
+      "vulns": []
+    },
+    {
+      "name": "contourpy",
+      "version": "1.3.3",
+      "vulns": []
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1",
+      "vulns": []
+    },
+    {
+      "name": "defusedxml",
+      "version": "0.7.1",
+      "vulns": []
+    },
+    {
+      "name": "distro",
+      "version": "1.9.0",
+      "vulns": []
+    },
+    {
+      "name": "faiss-cpu",
+      "version": "1.13.2",
+      "vulns": []
+    },
+    {
+      "name": "fastapi",
+      "version": "0.162.0",
+      "vulns": []
+    },
+    {
+      "name": "filelock",
+      "version": "4.0.0",
+      "vulns": [
+        {
+          "id": "GHSA-v4x8-3wr5-3wq8",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112940"
+          ]
+        },
+        {
+          "id": "GHSA-9vhv-jxww-xfm5",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112913"
+          ]
+        },
+        {
+          "id": "GHSA-567q-5qvw-pf92",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112907"
+          ]
+        },
+        {
+          "id": "GHSA-m462-7rxw-wvpg",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112938"
+          ]
+        },
+        {
+          "id": "GHSA-j8f7-rjxc-mr56",
+          "fix_versions": [
+            "4.0.9"
+          ],
+          "aliases": [
+            "CVE-2026-112936"
+          ]
+        },
+        {
+          "id": "GHSA-8mx5-7m5m-r77g",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112910"
+          ]
+        },
+        {
+          "id": "GHSA-fj95-fr6c-h845",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112934"
+          ]
+        },
+        {
+          "id": "GHSA-69hj-f68j-2879",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112909"
+          ]
+        },
+        {
+          "id": "GHSA-9c4x-gm8v-wgc4",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112911"
+          ]
+        },
+        {
+          "id": "GHSA-rfpc-qcw5-3pc4",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112939"
+          ]
+        },
+        {
+          "id": "GHSA-cwqr-hh33-gh44",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112915"
+          ]
+        },
+        {
+          "id": "GHSA-fq56-3cx3-fjxp",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112935"
+          ]
+        },
+        {
+          "id": "GHSA-9j6q-wvj5-jgjg",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112912"
+          ]
+        },
+        {
+          "id": "GHSA-6627-m3xw-93mp",
+          "fix_versions": [
+            "4.2.1"
+          ],
+          "aliases": [
+            "CVE-2026-112908"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fonttools",
+      "version": "4.65.0",
+      "vulns": []
+    },
+    {
+      "name": "fsspec",
+      "version": "2026.7.0",
+      "vulns": []
+    },
+    {
+      "name": "h11",
+      "version": "0.16.0",
+      "vulns": []
+    },
+    {
+      "name": "hf-xet",
+      "version": "1.6.0",
+      "vulns": []
+    },
+    {
+      "name": "httpcore",
+      "version": "1.0.9",
+      "vulns": []
+    },
+    {
+      "name": "httpcore2",
+      "version": "2.13.0",
+      "vulns": []
+    },
+    {
+      "name": "httptools",
+      "version": "0.8.0",
+      "vulns": []
+    },
+    {
+      "name": "httpx",
+      "version": "0.28.1",
+      "vulns": []
+    },
+    {
+      "name": "httpx2",
+      "version": "2.13.0",
+      "vulns": []
+    },
+    {
+      "name": "huggingface-hub",
+      "version": "1.32.0",
+      "vulns": []
+    },
+    {
+      "name": "idna",
+      "version": "3.20",
+      "vulns": []
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.0",
+      "vulns": []
+    },
+    {
+      "name": "itsdangerous",
+      "version": "2.2.0",
+      "vulns": []
+    },
+    {
+      "name": "jinja2",
+      "version": "3.1.6",
+      "vulns": []
+    },
+    {
+      "name": "joblib",
+      "version": "1.6.0",
+      "vulns": []
+    },
+    {
+      "name": "jsonpatch",
+      "version": "1.33",
+      "vulns": []
+    },
+    {
+      "name": "jsonpointer",
+      "version": "3.1.1",
+      "vulns": []
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "vulns": []
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "vulns": []
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.1",
+      "vulns": []
+    },
+    {
+      "name": "kombu",
+      "version": "5.6.2",
+      "vulns": []
+    },
+    {
+      "name": "langchain-core",
+      "version": "1.6.3",
+      "vulns": []
+    },
+    {
+      "name": "langchain-protocol",
+      "version": "0.0.19",
+      "vulns": []
+    },
+    {
+      "name": "langchain-text-splitters",
+      "version": "1.1.2",
+      "vulns": []
+    },
+    {
+      "name": "langsmith",
+      "version": "0.12.6",
+      "vulns": []
+    },
+    {
+      "name": "markdown-it-py",
+      "version": "4.2.0",
+      "vulns": []
+    },
+    {
+      "name": "markupsafe",
+      "version": "3.0.3",
+      "vulns": []
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.11.2",
+      "vulns": []
+    },
+    {
+      "name": "mdurl",
+      "version": "0.1.2",
+      "vulns": []
+    },
+    {
+      "name": "mpmath",
+      "version": "1.3.0",
+      "vulns": []
+    },
+    {
+      "name": "narwhals",
+      "version": "2.26.0",
+      "vulns": []
+    },
+    {
+      "name": "networkx",
+      "version": "3.6.1",
+      "vulns": []
+    },
+    {
+      "name": "nltk",
+      "version": "3.10.3",
+      "vulns": [
+        {
+          "id": "GHSA-8mgp-746c-j5xp",
+          "fix_versions": [],
+          "aliases": [
+            "PYSEC-2026-3740",
+            "CVE-2026-81726"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "numpy",
+      "version": "2.4.6",
+      "vulns": []
+    },
+    {
+      "name": "opentelemetry-api",
+      "version": "1.45.2",
+      "vulns": []
+    },
+    {
+      "name": "orjson",
+      "version": "3.12.0",
+      "vulns": []
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "vulns": []
+    },
+    {
+      "name": "pandas",
+      "version": "3.0.6",
+      "vulns": []
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0",
+      "vulns": [
+        {
+          "id": "PYSEC-2026-4327",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-4558-3h8r-v8xp",
+            "CVE-2026-112394"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4328",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112396",
+            "GHSA-4rr5-89j8-mwwm"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4326",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112392",
+            "GHSA-27h8-gf7j-v5hc"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4339",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96639",
+            "GHSA-v9pv-5gc8-w2m6"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4340",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-4rm8-3hmm-39fg",
+            "CVE-2026-96641"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4343",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96644",
+            "GHSA-9v9v-9qvf-h2hj"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4334",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112896",
+            "GHSA-pchr-8j38-3x4p"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4337",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-p8hx-v2p6-rp84",
+            "CVE-2026-96636"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4341",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96642",
+            "GHSA-3j72-p6qg-6xp7"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4330",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-5x8w-8jj5-q52h",
+            "CVE-2026-112398"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4338",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96637",
+            "GHSA-g842-9rc4-69pw"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4335",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-xgh8-jp6q-p5x8",
+            "CVE-2026-112901"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4336",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-114501",
+            "GHSA-654x-cwwv-5j9c"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4331",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-7mwm-ghpf-9vrm",
+            "CVE-2026-112402"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4332",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-8g5g-8vmr-9782",
+            "CVE-2026-112403"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4329",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "GHSA-58r4-6rv3-gfh8",
+            "CVE-2026-112397"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4333",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112405",
+            "GHSA-cp9v-662q-vvx9"
+          ]
+        },
+        {
+          "id": "PYSEC-2026-4342",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96643",
+            "GHSA-g4qv-2jxx-769h"
+          ]
+        },
+        {
+          "id": "GHSA-p4wg-p73j-c528",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112895"
+          ]
+        },
+        {
+          "id": "GHSA-65qm-jvmh-6pqg",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112400"
+          ]
+        },
+        {
+          "id": "GHSA-q45j-58j2-45rg",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112897"
+          ]
+        },
+        {
+          "id": "GHSA-462x-pgg6-55fp",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112395"
+          ]
+        },
+        {
+          "id": "GHSA-c6hw-5grf-ff96",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112404"
+          ]
+        },
+        {
+          "id": "GHSA-vx6w-vv9f-6gvg",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112899"
+          ]
+        },
+        {
+          "id": "GHSA-w889-685w-c8fh",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112900"
+          ]
+        },
+        {
+          "id": "GHSA-j4m9-6w36-pw47",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112893"
+          ]
+        },
+        {
+          "id": "GHSA-fc9g-5qg7-mf45",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112891"
+          ]
+        },
+        {
+          "id": "GHSA-22hg-r758-rrw9",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112390"
+          ]
+        },
+        {
+          "id": "GHSA-74r2-7ff9-mjj2",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112401"
+          ]
+        },
+        {
+          "id": "GHSA-254f-3936-288h",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112391"
+          ]
+        },
+        {
+          "id": "GHSA-jg86-v3jv-hrpm",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112894"
+          ]
+        },
+        {
+          "id": "GHSA-f2g6-542v-9j58",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112406"
+          ]
+        },
+        {
+          "id": "GHSA-5xm2-6676-qcp9",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112399"
+          ]
+        },
+        {
+          "id": "GHSA-gg2r-wvfm-q9rx",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112892"
+          ]
+        },
+        {
+          "id": "GHSA-332p-7hrc-92wf",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-112393"
+          ]
+        },
+        {
+          "id": "GHSA-24rc-8hj2-v98c",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96638"
+          ]
+        },
+        {
+          "id": "GHSA-mrfp-p49p-3hf2",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96640"
+          ]
+        },
+        {
+          "id": "GHSA-g7cr-3p24-7wf7",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": [
+            "CVE-2026-96778"
+          ]
+        },
+        {
+          "id": "GHSA-78g4-xqwv-q3g8",
+          "fix_versions": [
+            "13.0.0"
+          ],
+          "aliases": []
+        }
+      ]
+    },
+    {
+      "name": "pluggy",
+      "version": "1.6.0",
+      "vulns": []
+    },
+    {
+      "name": "prometheus-client",
+      "version": "0.26.0",
+      "vulns": []
+    },
+    {
+      "name": "prompt-toolkit",
+      "version": "3.0.53",
+      "vulns": []
+    },
+    {
+      "name": "protobuf",
+      "version": "7.36.2",
+      "vulns": []
+    },
+    {
+      "name": "psutil",
+      "version": "7.2.2",
+      "vulns": []
+    },
+    {
+      "name": "pyarrow",
+      "version": "25.0.1",
+      "vulns": []
+    },
+    {
+      "name": "pydantic",
+      "version": "2.13.5",
+      "vulns": []
+    },
+    {
+      "name": "pydantic-core",
+      "version": "2.46.5",
+      "vulns": []
+    },
+    {
+      "name": "pydeck",
+      "version": "0.9.3",
+      "vulns": []
+    },
+    {
+      "name": "pygments",
+      "version": "2.21.0",
+      "vulns": []
+    },
+    {
+      "name": "pymupdf",
+      "version": "1.28.2",
+      "vulns": []
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.2",
+      "vulns": []
+    },
+    {
+      "name": "pytest",
+      "version": "9.1.1",
+      "vulns": []
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0",
+      "vulns": []
+    },
+    {
+      "name": "python-multipart",
+      "version": "0.0.32",
+      "vulns": []
+    },
+    {
+      "name": "pyyaml",
+      "version": "6.0.3",
+      "vulns": []
+    },
+    {
+      "name": "redis",
+      "version": "6.4.0",
+      "vulns": []
+    },
+    {
+      "name": "referencing",
+      "version": "0.37.0",
+      "vulns": []
+    },
+    {
+      "name": "regex",
+      "version": "2026.9.10",
+      "vulns": []
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2",
+      "vulns": []
+    },
+    {
+      "name": "requests-toolbelt",
+      "version": "1.0.0",
+      "vulns": []
+    },
+    {
+      "name": "rich",
+      "version": "15.0.0",
+      "vulns": []
+    },
+    {
+      "name": "rpds-py",
+      "version": "2026.6.3",
+      "vulns": []
+    },
+    {
+      "name": "ruff",
+      "version": "0.17.3",
+      "vulns": []
+    },
+    {
+      "name": "safetensors",
+      "version": "0.8.0",
+      "vulns": []
+    },
+    {
+      "name": "scikit-learn",
+      "version": "1.9.1",
+      "vulns": []
+    },
+    {
+      "name": "scipy",
+      "version": "1.17.1",
+      "vulns": []
+    },
+    {
+      "name": "seaborn",
+      "version": "0.13.2",
+      "vulns": []
+    },
+    {
+      "name": "sentence-transformers",
+      "version": "6.0.1",
+      "vulns": []
+    },
+    {
+      "name": "shellingham",
+      "version": "1.5.4",
+      "vulns": []
+    },
+    {
+      "name": "six",
+      "version": "1.17.0",
+      "vulns": []
+    },
+    {
+      "name": "sniffio",
+      "version": "1.3.1",
+      "vulns": []
+    },
+    {
+      "name": "starlette",
+      "version": "1.6.0",
+      "vulns": []
+    },
+    {
+      "name": "streamlit",
+      "version": "1.64.0",
+      "vulns": []
+    },
+    {
+      "name": "sympy",
+      "version": "1.14.0",
+      "vulns": []
+    },
+    {
+      "name": "tenacity",
+      "version": "9.1.4",
+      "vulns": []
+    },
+    {
+      "name": "threadpoolctl",
+      "version": "3.7.0",
+      "vulns": []
+    },
+    {
+      "name": "tokenizers",
+      "version": "0.23.2",
+      "vulns": []
+    },
+    {
+      "name": "toml",
+      "version": "0.10.2",
+      "vulns": []
+    },
+    {
+      "name": "torch",
+      "version": "2.14.0",
+      "vulns": []
+    },
+    {
+      "name": "tqdm",
+      "version": "4.70.1",
+      "vulns": []
+    },
+    {
+      "name": "transformers",
+      "version": "5.17.0",
+      "vulns": []
+    },
+    {
+      "name": "truststore",
+      "version": "0.10.4",
+      "vulns": []
+    },
+    {
+      "name": "typer",
+      "version": "0.27.2",
+      "vulns": []
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.4",
+      "vulns": []
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "vulns": []
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6",
+      "vulns": []
+    },
+    {
+      "name": "tzlocal",
+      "version": "5.4.5",
+      "vulns": []
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0",
+      "vulns": []
+    },
+    {
+      "name": "uuid-utils",
+      "version": "0.17.1",
+      "vulns": []
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.53.0",
+      "vulns": []
+    },
+    {
+      "name": "vine",
+      "version": "5.1.0",
+      "vulns": []
+    },
+    {
+      "name": "wcwidth",
+      "version": "0.9.4",
+      "vulns": []
+    },
+    {
+      "name": "websockets",
+      "version": "16.1.1",
+      "vulns": []
+    },
+    {
+      "name": "xxhash",
+      "version": "4.0.1",
+      "vulns": []
+    },
+    {
+      "name": "zstandard",
+      "version": "0.25.0",
+      "vulns": []
+    }
+  ],
+  "fixes": []
+}

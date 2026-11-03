@@ -1,0 +1,14 @@
+.git
+.venv
+var
+.cache
+.pytest_cache
+.ruff_cache
+**/__pycache__
+.DS_Store
+.codex
+.agents
+.aws
+.env
+.streamlit/secrets.toml
+.ci

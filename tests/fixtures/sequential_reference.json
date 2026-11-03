@@ -1,0 +1,325 @@
+{
+  "provenance": {
+    "research_commit": "d845bc63dc00cf3333bc602134645f871d22e8cc",
+    "model_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "scope": "debug corpus, sequential original helpers; never OHRBench results"
+  },
+  "configurations": {
+    "fixed": {
+      "question_count": 4,
+      "chunk_count": 4,
+      "rankings": [
+        {
+          "query_id": "debug-0",
+          "chunk_ids": [
+            "astronomy_fixed_0000",
+            "ocean_fixed_0000",
+            "botany_fixed_0000",
+            "transport_fixed_0000"
+          ]
+        },
+        {
+          "query_id": "debug-1",
+          "chunk_ids": [
+            "botany_fixed_0000",
+            "ocean_fixed_0000",
+            "transport_fixed_0000",
+            "astronomy_fixed_0000"
+          ]
+        },
+        {
+          "query_id": "debug-2",
+          "chunk_ids": [
+            "transport_fixed_0000",
+            "botany_fixed_0000",
+            "astronomy_fixed_0000",
+            "ocean_fixed_0000"
+          ]
+        },
+        {
+          "query_id": "debug-3",
+          "chunk_ids": [
+            "ocean_fixed_0000",
+            "botany_fixed_0000",
+            "astronomy_fixed_0000",
+            "transport_fixed_0000"
+          ]
+        }
+      ],
+      "per_question": [
+        {
+          "query_id": "debug-0",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-1",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-2",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-3",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        }
+      ],
+      "hit_at_1": 1.0,
+      "hit_at_5": 1.0,
+      "mrr_at_100": 1.0
+    },
+    "recursive": {
+      "question_count": 4,
+      "chunk_count": 4,
+      "rankings": [
+        {
+          "query_id": "debug-0",
+          "chunk_ids": [
+            "astronomy_recursive_0000",
+            "ocean_recursive_0000",
+            "botany_recursive_0000",
+            "transport_recursive_0000"
+          ]
+        },
+        {
+          "query_id": "debug-1",
+          "chunk_ids": [
+            "botany_recursive_0000",
+            "ocean_recursive_0000",
+            "transport_recursive_0000",
+            "astronomy_recursive_0000"
+          ]
+        },
+        {
+          "query_id": "debug-2",
+          "chunk_ids": [
+            "transport_recursive_0000",
+            "botany_recursive_0000",
+            "astronomy_recursive_0000",
+            "ocean_recursive_0000"
+          ]
+        },
+        {
+          "query_id": "debug-3",
+          "chunk_ids": [
+            "ocean_recursive_0000",
+            "botany_recursive_0000",
+            "astronomy_recursive_0000",
+            "transport_recursive_0000"
+          ]
+        }
+      ],
+      "per_question": [
+        {
+          "query_id": "debug-0",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-1",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-2",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-3",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        }
+      ],
+      "hit_at_1": 1.0,
+      "hit_at_5": 1.0,
+      "mrr_at_100": 1.0
+    },
+    "semantic": {
+      "question_count": 4,
+      "chunk_count": 4,
+      "rankings": [
+        {
+          "query_id": "debug-0",
+          "chunk_ids": [
+            "astronomy_semantic_0000",
+            "ocean_semantic_0000",
+            "botany_semantic_0000",
+            "transport_semantic_0000"
+          ]
+        },
+        {
+          "query_id": "debug-1",
+          "chunk_ids": [
+            "botany_semantic_0000",
+            "ocean_semantic_0000",
+            "transport_semantic_0000",
+            "astronomy_semantic_0000"
+          ]
+        },
+        {
+          "query_id": "debug-2",
+          "chunk_ids": [
+            "transport_semantic_0000",
+            "botany_semantic_0000",
+            "astronomy_semantic_0000",
+            "ocean_semantic_0000"
+          ]
+        },
+        {
+          "query_id": "debug-3",
+          "chunk_ids": [
+            "ocean_semantic_0000",
+            "botany_semantic_0000",
+            "astronomy_semantic_0000",
+            "transport_semantic_0000"
+          ]
+        }
+      ],
+      "per_question": [
+        {
+          "query_id": "debug-0",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-1",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-2",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-3",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        }
+      ],
+      "hit_at_1": 1.0,
+      "hit_at_5": 1.0,
+      "mrr_at_100": 1.0
+    },
+    "structure": {
+      "question_count": 4,
+      "chunk_count": 8,
+      "rankings": [
+        {
+          "query_id": "debug-0",
+          "chunk_ids": [
+            "astronomy_structure_0000",
+            "astronomy_structure_0001",
+            "ocean_structure_0001",
+            "ocean_structure_0000",
+            "botany_structure_0000",
+            "botany_structure_0001",
+            "transport_structure_0001",
+            "transport_structure_0000"
+          ]
+        },
+        {
+          "query_id": "debug-1",
+          "chunk_ids": [
+            "botany_structure_0000",
+            "botany_structure_0001",
+            "ocean_structure_0001",
+            "transport_structure_0001",
+            "ocean_structure_0000",
+            "transport_structure_0000",
+            "astronomy_structure_0001",
+            "astronomy_structure_0000"
+          ]
+        },
+        {
+          "query_id": "debug-2",
+          "chunk_ids": [
+            "transport_structure_0000",
+            "transport_structure_0001",
+            "botany_structure_0001",
+            "botany_structure_0000",
+            "astronomy_structure_0001",
+            "ocean_structure_0001",
+            "astronomy_structure_0000",
+            "ocean_structure_0000"
+          ]
+        },
+        {
+          "query_id": "debug-3",
+          "chunk_ids": [
+            "ocean_structure_0001",
+            "ocean_structure_0000",
+            "botany_structure_0001",
+            "botany_structure_0000",
+            "astronomy_structure_0001",
+            "astronomy_structure_0000",
+            "transport_structure_0001",
+            "transport_structure_0000"
+          ]
+        }
+      ],
+      "per_question": [
+        {
+          "query_id": "debug-0",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-1",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-2",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        },
+        {
+          "query_id": "debug-3",
+          "hit_at_1": 1,
+          "hit_at_5": 1,
+          "reciprocal_rank": 1.0,
+          "first_relevant_rank": 1
+        }
+      ],
+      "hit_at_1": 1.0,
+      "hit_at_5": 1.0,
+      "mrr_at_100": 1.0
+    }
+  }
+}

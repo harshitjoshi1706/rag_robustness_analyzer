@@ -1,0 +1,91 @@
+name: Local platform validation
+on:
+  pull_request:
+  push:
+    branches: [main, 'feature/**']
+    paths-ignore:
+      - PROGRESS.md
+      - 'docs/**'
+      - README.md
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      RAG_RESEARCH_MOUNT: ./.ci/research
+      RAG_ALLOW_FIXTURE: '1'
+      RAG_LEASE_SECONDS: '15'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: harshitjoshi1706/rag_chunk_robustness
+          ref: d845bc63dc00cf3333bc602134645f871d22e8cc
+          path: .ci/research
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@v3
+      - name: Validate Compose
+        run: docker compose config --quiet
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          push: false
+          tags: rag-evaluation:local
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Formatting and lint (new platform code)
+        run: |
+          docker run --rm rag-evaluation:local ruff check --no-cache platform_eval scripts tests/distributed services/platform_client.py pages/4_Distributed_Evaluation.py
+          docker run --rm rag-evaluation:local ruff format --no-cache --check platform_eval scripts tests/distributed services/platform_client.py pages/4_Distributed_Evaluation.py
+      - name: Prepare fixed MiniLM snapshot (no OHRBench download)
+        run: |
+          mkdir -p var
+          docker run --rm --user "$(id -u):$(id -g)" -e HF_HOME=/app/var/huggingface -v "$PWD/var:/app/var" rag-evaluation:local python scripts/prepare_model.py --output /app/var/model
+      - name: Unit, API, UI and frozen sequential research regression
+        run: docker compose run --rm --no-deps -e RUN_REAL_RAG_TESTS=1 api python -m unittest discover -s tests -v
+      - name: Original lightweight research tests
+        run: |
+          docker compose run --rm --no-deps api python -m unittest discover -s /research/tests -p test_retrieval_metrics.py -v
+          docker compose run --rm --no-deps api python -m unittest discover -s /research/tests -p test_runner_resume.py -v
+          docker compose run --rm --no-deps api python -m unittest discover -s /research/tests -p test_semantic_phase4e.py -v
+      - name: Start local integration services
+        run: docker compose up -d --no-build --wait --wait-timeout 180 --scale worker=2
+      - name: Real broker integration, duplicate delivery, retry and recovery
+        run: docker compose exec -T api python -m scripts.integration_check --real
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Actual worker-container failure recovery
+        run: python scripts/worker_recovery.py --allow-worker-kill
+      - name: Coordinator restart with durable pending work
+        run: python scripts/coordinator_recovery.py --allow-api-restart
+      - name: Dependency advisory report (baseline pins retained)
+        continue-on-error: true
+        run: |
+          python -m pip install pip-audit==2.9.0
+          pip-audit -r requirements-lock.txt --no-deps --disable-pip --format json --output dependency-audit.json
+      - name: Secret scan
+        run: docker run --rm -v "$PWD:/repo:ro" zricethezav/gitleaks:v8.24.2 detect --source /repo --no-git --redact --gitleaks-ignore-path /repo/.gitleaksignore
+      - name: Diagnostics
+        if: always()
+        run: |
+          mkdir -p var/ci
+          docker compose ps -a > var/ci/services.txt
+          docker compose logs --no-color --tail 500 > var/ci/services.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation-diagnostics
+          path: |
+            var/ci
+            dependency-audit.json
+      - name: Stop containers
+        if: always()
+        run: docker compose down
