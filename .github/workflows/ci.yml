@@ -68,7 +68,7 @@ jobs:
           python -m pip install pip-audit==2.9.0
           pip-audit -r requirements-lock.txt --no-deps --disable-pip --format json --output dependency-audit.json
       - name: Secret scan
-        run: docker run --rm -v "$PWD:/repo:ro" zricethezav/gitleaks:v8.24.2 detect --source /repo --no-git --redact
+        run: docker run --rm -v "$PWD:/repo:ro" zricethezav/gitleaks:v8.24.2 detect --source /repo --no-git --redact --gitleaks-ignore-path /repo/.gitleaksignore
       - name: Diagnostics
         if: always()
         run: |

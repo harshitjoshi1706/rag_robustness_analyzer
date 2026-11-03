@@ -1,0 +1,5 @@
+# Public SHA-256 hashes of tokenizer artifacts in the frozen model manifest.
+# These exact three fingerprint locations are verified scientific data, not credentials.
+/repo/platform_eval/data/scientific_baseline.json:generic-api-key:10
+/repo/platform_eval/data/scientific_baseline.json:generic-api-key:11
+/repo/platform_eval/data/scientific_baseline.json:generic-api-key:12
