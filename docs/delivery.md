@@ -1,6 +1,7 @@
 # Distributed RAG Evaluation Platform handoff
 
-Finalized 3 November 2026, Asia/Kolkata. Implementation is on
+Initial handoff finalized 3 November 2026, Asia/Kolkata.
+Current phase and remote-CI status is maintained in [PROGRESS.md](../PROGRESS.md). Implementation is on
 `feature/distributed-evaluation-platform` in the analyzer repository. The research
 repository was inspected and tested, with no source or historical-result edits.
 Its pre-existing untracked `make_dataset_heatmap.py` remains untouched.
@@ -44,10 +45,10 @@ Six implementation commits precede the final documentation commit:
 - `dacb5bd` — Docker, observability, benchmarks, CI and security checks.
 - `ade4a99` — narrow public-hash secret-scan exceptions and normalized advisory report.
 
-The final documentation commit is identifiable with
-`git log -1 --oneline`; this report is part of that commit, so its own hash is not
-embedded recursively. No branch was pushed, no pull request was created, no image
-was published and no cloud service was deployed.
+The initial documentation commit is `e8ea766`. At that handoff no branch had been
+pushed and no pull request had been created. Later feature-branch pushes and CI
+observations are recorded in PROGRESS.md. No image publishing or cloud deployment
+is configured or performed.
 
 ## Verification results
 

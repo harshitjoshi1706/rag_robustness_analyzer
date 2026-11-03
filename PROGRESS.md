@@ -26,7 +26,7 @@ a benchmark measurement, multi-host scaling, or successful GitHub-hosted CI.
 | 4 | FastAPI backend | COMPLETED | API validation, state/results/cancellation/readiness/metrics tests passed |
 | 5 | Streamlit integration | COMPLETED | Existing pages/tests preserved; distributed submission/progress and outage handling tested |
 | 6 | Docker, observability and benchmarking | IN PROGRESS | Stack and monitoring verified; real 1/2/4-worker benchmark measurements pending |
-| 7 | Automated tests and GitHub Actions | IN PROGRESS | Local suites and integration passed; feature-branch push and hosted CI validation next |
+| 7 | Automated tests and GitHub Actions | IN PROGRESS | Local suites and integration passed; feature branch pushed; first hosted run failed; corrections in validation |
 
 Phases 2–5 were implemented and validated while the longer scientific/measurement
 acceptance gates remain open. Their completion does not close Phase 1 or Phase 6.
@@ -176,9 +176,13 @@ acceptance gates remain open. Their completion does not close Phase 1 or Phase 6
   Dependency audit reduced **55 findings to 1** NLTK advisory with no listed fix;
   audit exits **1**, not a clean security pass. Workflow YAML parsed successfully.
 - **Git commits:** `559886e`, `dacb5bd`, `ade4a99`, `e8ea766`.
-  The tracker-introduction commit can be located with
-  `git log --oneline -- PROGRESS.md`; its own hash cannot be embedded recursively.
-- **Current blockers/open gate:** hosted workflow has not yet been observed. The
+  Tracker-introduction commit: `a2e93a2` (pushed). Subsequent tracker commits can
+  be located with `git log --oneline -- PROGRESS.md`.
+- **Current blockers/open gate:** first hosted workflow failed at lint cache permissions; downstream required tests
+  were skipped and do not count as passing.
+  Source inspection identified a fresh-checkout model bind-directory issue; the
+  corrected standalone Docker preparation passed locally as a non-root user, with
+  every frozen model hash matching. Hosted validation of that change is pending. The
   remaining NLTK advisory is documented in `docs/validation.md`; no fixed version was
   listed at the recorded audit. The affected model import/export APIs are not exposed.
 - **Next planned phase:** commit and push progress to the feature branch, observe
@@ -191,6 +195,9 @@ acceptance gates remain open. Their completion does not close Phase 1 or Phase 6
 | --- | --- | --- |
 | 2–3 Nov 2026 | Initial implementation and local acceptance testing | Commits `2bdf46d` through `e8ea766`; historical evidence reconstructed above |
 | 3 Nov 2026 | Progress tracker introduced after additional instruction | Earlier timing is not backdated; Phase 1/6/7 remain IN PROGRESS |
+| 3 Nov 2026 | First hosted CI failed | [Run 41588188213](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588188213) built Linux AMD64 CPU image and validated Compose, then Ruff could not write `/app/.ruff_cache`; diagnostics also encountered a root-owned `var` directory. Remaining tests skipped. Fix: standalone no-cache lint and model preparation before Compose mounts |
+| 3 Nov 2026 | Phase 7 CI preparation milestone | Fresh-directory, non-root standalone Docker model preparation passed against all frozen model hashes; workflow YAML and tracker structure checks passed. Push filters exclude progress-only updates while retaining PR validation |
+| 3 Nov 2026 | Tracker and implementation pushed | `a2e93a2` on feature branch; [hosted run 41588188213](https://github.com/harshitjoshi1706/rag_robustness_analyzer/actions/runs/41588188213) started, not yet passed |
 | 3 Nov 2026 | GitHub branch read access checked | Unsandboxed `git ls-remote --heads origin feature/distributed-evaluation-platform` succeeded; branch did not yet exist |
 
 ## Operating rules for subsequent milestones
